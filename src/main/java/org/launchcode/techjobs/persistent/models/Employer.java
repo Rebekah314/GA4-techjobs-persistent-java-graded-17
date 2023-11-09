@@ -17,7 +17,7 @@ public class Employer extends AbstractEntity {
 
 
     @OneToMany
-    @JoinColumn(name = "jobId")
+    @JoinColumn(name = "employer_id")
     private List<Job> jobs = new ArrayList<>();
 
     public Employer(String location) {
