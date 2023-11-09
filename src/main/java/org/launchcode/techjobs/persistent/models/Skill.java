@@ -1,12 +1,17 @@
 package org.launchcode.techjobs.persistent.models;
 
 import jakarta.persistence.Entity;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.ManyToMany;
 import jakarta.validation.constraints.Size;
+
+import java.util.List;
 
 
 @Entity
 public class Skill extends AbstractEntity {
+
+    @ManyToMany(mappedBy="skills")
+    private List<Job> jobs;
 
     @Size(max = 200, message = "Description is limited to 200 characters.")
     private String description;
@@ -23,5 +28,13 @@ public class Skill extends AbstractEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJob(List<Job> jobs) {
+        this.jobs = jobs;
     }
 }
