@@ -13,8 +13,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,15 +57,22 @@ public class HomeController {
                                     Errors errors, Model model, @RequestParam int employerId,
                                     @RequestParam List<Integer> skills) {
 
-        if (errors.hasErrors()) {
-	    model.addAttribute("title", "Add Job");
+        Optional<Employer> result = employerRepository.findById(employerId);
+
+        if (errors.hasErrors() || skills == null || result.isEmpty()) {
+	        model.addAttribute("title", "Add Job");
+            model.addAttribute("employers", employerRepository.findAll());
+            model.addAttribute("skills", skillRepository.findAll());
             return "add";
         }
-        Employer employerObj = employerRepository.findById(employerId).get();
+
+        Employer employerObj = result.get();
         newJob.setEmployer(employerObj);
+
 
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
         newJob.setSkills(skillObjs);
+
 
         jobRepository.save(newJob);
 
