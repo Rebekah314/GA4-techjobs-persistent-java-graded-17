@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Optional;
 
+import static org.springframework.data.repository.util.ClassUtils.ifPresent;
+
 /**
  * Created by LaunchCode
  */
@@ -59,20 +61,20 @@ public class HomeController {
 
         Optional<Employer> result = employerRepository.findById(employerId);
 
-        if (errors.hasErrors() || skills == null || result.isEmpty()) {
+        if (errors.hasErrors() || skills == null) {
 	        model.addAttribute("title", "Add Job");
             model.addAttribute("employers", employerRepository.findAll());
             model.addAttribute("skills", skillRepository.findAll());
             return "add";
         }
 
-        Employer employerObj = result.get();
-        newJob.setEmployer(employerObj);
-
+        if (result.isPresent()) {
+            Employer employerObj = result.get();
+            newJob.setEmployer(employerObj);
+        }
 
         List<Skill> skillObjs = (List<Skill>) skillRepository.findAllById(skills);
         newJob.setSkills(skillObjs);
-
 
         jobRepository.save(newJob);
 
